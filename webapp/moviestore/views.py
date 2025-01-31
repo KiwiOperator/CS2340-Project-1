@@ -1,5 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
 from .forms import CustomUserCreationForm  # Import the custom form
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -7,6 +9,11 @@ from .forms import LoginForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Review
 from .forms import ReviewForm
+
+@login_required
+def review_page(request):
+    reviews = Review.objects.filter(user=request.user)  # Show only the logged-in user's reviews
+    return render(request, 'moviestore/review_page.html', {'reviews': reviews})
 
 @login_required
 def create_review(request):
@@ -45,7 +52,9 @@ def delete_review(request, review_id):
 
 
 def index(request):
-    return HttpResponse("Placeholder")
+    if request.user.is_authenticated:
+        return redirect('review_page')  # Redirect logged-in users to the review page
+    return render(request, 'moviestore/index.html')  # Render the homepage for non-logged-in users
 
 def login_view(request):
     if request.method == "POST":

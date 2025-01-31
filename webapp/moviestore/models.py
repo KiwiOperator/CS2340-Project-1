@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Movie(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    release_date = models.DateField()
+
+    def __str__(self):
+        return self.title
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links the review to a user
     movie_title = models.CharField(max_length=200)  # Title of the movie being reviewed

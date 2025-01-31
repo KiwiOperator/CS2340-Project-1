@@ -1,10 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm  # Import the custom form
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from .forms import LoginForm
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from .models import Review
 from .forms import ReviewForm
 
@@ -47,22 +47,33 @@ def delete_review(request, review_id):
 def index(request):
     return HttpResponse("Placeholder")
 
-def login(request):
-    if request.method == "GET":
-        form = LoginForm()
-        return render(request, 'moviestore/login.html', {'form': form})
-    elif request.method == "POST":
-        form = LoginForm(request.POST)
-
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            user = form.get_user()
+            login(request, user)
+            return render(request, "moviestore/success.html")  # Show success message after login
+        else:
+            print("Login errors:", form.errors)  # Debugging login failures
+    else:
+        form = AuthenticationForm()
+    return render(request, "moviestore/login.html", {"form": form})
 
-            user = authenticate(username=username, password=password)
-            if user:
-                login(request, user)
-                messages.success(request, f'Hi {username.title()}, welcome back!')
-                return redirect('index')
+def signup_view(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)  # Use custom form here
+        if form.is_valid():
+            user = form.save(commit=False)  # Create user but don’t save yet
+            user.set_password(form.cleaned_data["password1"])  # Set the password manually
+            user.save()  # Now save the user
+            return redirect("login")  # Redirect to login page after successful signup
+        else:
+            print("Signup errors:", form.errors)  # Debugging signup failures
+    else:
+        form = CustomUserCreationForm()  # Initialize custom form
+    return render(request, "moviestore/signup.html", {"form": form})
 
-    messages.error(request, 'Invalid username or password')
-    return render(request, 'moviestore/login.html', {'form': form})
+@login_required
+def success_view(request):
+    return render(request, "moviestore/success.html")

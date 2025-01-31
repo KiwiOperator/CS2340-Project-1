@@ -1,79 +1,41 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm  # Import the custom form
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from .forms import LoginForm
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Review
-from .forms import ReviewForm
-
-@login_required
-def create_review(request):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user  # Assign the logged-in user to the review
-            review.save()
-            return redirect('index')  # Redirect to the homepage after saving
-    else:
-        form = ReviewForm()
-    return render(request, 'moviestore/create_review.html', {'form': form})
-
-@login_required
-def edit_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id, user=request.user)  # Ensure the user owns the review
-    if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
-        if form.is_valid():
-            form.save()
-            return redirect('index')  # Redirect to the homepage after saving
-    else:
-        form = ReviewForm(instance=review)
-    return render(request, 'moviestore/edit_review.html', {'form': form})
-
-@login_required
-def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id, user=request.user)  # Ensure the user owns the review
-    if request.method == 'POST':
-        review.delete()
-        return redirect('index')  # Redirect to the homepage after deleting
-    return render(request, 'moviestore/confirm_delete.html', {'review': review})
+from .models import Movie
 
 # Create your views here.
+
 
 
 def index(request):
     return HttpResponse("Placeholder")
 
-def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return render(request, "moviestore/success.html")  # Show success message after login
-        else:
-            print("Login errors:", form.errors)  # Debugging login failures
-    else:
-        form = AuthenticationForm()
-    return render(request, "moviestore/login.html", {"form": form})
+def login(request):
+    if request.method == "GET":
+        form = LoginForm()
+        return render(request, 'moviestore/login.html', {'form': form})
+    elif request.method == "POST":
+        form = LoginForm(request.POST)
 
-def signup_view(request):
-    if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)  # Use custom form here
         if form.is_valid():
-            user = form.save(commit=False)  # Create user but don’t save yet
-            user.set_password(form.cleaned_data["password1"])  # Set the password manually
-            user.save()  # Now save the user
-            return redirect("login")  # Redirect to login page after successful signup
-        else:
-            print("Signup errors:", form.errors)  # Debugging signup failures
-    else:
-        form = CustomUserCreationForm()  # Initialize custom form
-    return render(request, "moviestore/signup.html", {"form": form})
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-@login_required
-def success_view(request):
-    return render(request, "moviestore/success.html")
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+                messages.success(request, f'Hi {username.title()}, welcome back!')
+                return redirect('index')
+
+    messages.error(request, 'Invalid username or password')
+    return render(request, 'moviestore/login.html', {'form': form})
+
+def homepage(request):
+    movies = Movie.objects.all()
+    paginator = Paginator(movies, 10);
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'moviestore/movie_list.html', {'page_obj': page_obj})

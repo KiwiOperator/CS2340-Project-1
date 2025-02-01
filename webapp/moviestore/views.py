@@ -7,8 +7,9 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from .forms import LoginForm
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Review
+from .models import Review, Movie
 from .forms import ReviewForm
+from django.core.paginator import Paginator
 
 @login_required
 def review_page(request):
@@ -86,3 +87,10 @@ def signup_view(request):
 @login_required
 def success_view(request):
     return render(request, "moviestore/success.html")
+
+def homepage(request):
+    movies = Movie.objects.all()
+    paginator = Paginator(movies, 10);
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'moviestore/movie_list.html', {'page_obj': page_obj})

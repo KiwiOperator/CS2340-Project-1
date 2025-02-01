@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(max_length = 200)
+    genre = models.TextField()
+    overview = models.TextField()
     release_date = models.DateField()
-
+    image_url = models.URLField(max_length = 200)
     def __str__(self):
         return self.title
 

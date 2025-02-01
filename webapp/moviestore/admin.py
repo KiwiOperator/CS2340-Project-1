@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Review
+from .models import Review, Movie
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('movie_title', 'user', 'rating', 'created_at', 'updated_at')  # Columns to display
@@ -15,3 +15,4 @@ class ReviewAdmin(admin.ModelAdmin):
     delete_selected_reviews.short_description = "Delete selected reviews"
 
 admin.site.register(Review, ReviewAdmin)
+admin.site.register(Movie)

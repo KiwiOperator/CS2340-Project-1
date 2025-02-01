@@ -8,17 +8,6 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ['movie_title', 'review_text', 'rating']
 
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget = forms.PasswordInput)
-
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2']
-
 class SignupForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
@@ -39,9 +28,11 @@ class SignupForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
 
     # Overriding password validation to remove any format checks
     def clean_password1(self):

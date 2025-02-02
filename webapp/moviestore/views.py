@@ -18,6 +18,8 @@ def review_page(request):
 
 @login_required
 def create_review(request):
+    movie_title = request.GET.get('movie_title', '')
+    reviews = Review.objects.filter(movie_title=movie_title)
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -26,8 +28,8 @@ def create_review(request):
             review.save()
             return redirect('index')  # Redirect to the homepage after saving
     else:
-        form = ReviewForm()
-    return render(request, 'moviestore/create_review.html', {'form': form})
+        form = ReviewForm(initial={'movie_title': movie_title})
+    return render(request, 'moviestore/create_review.html', {'form': form, 'reviews': reviews})
 
 @login_required
 def edit_review(request, review_id):
@@ -63,7 +65,8 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return render(request, "moviestore/success.html")  # Show success message after login
+            return redirect('homepage')
+            #return render(request, "moviestore/success.html")  # Show success message after login
         else:
             print("Login errors:", form.errors)  # Debugging login failures
     else:
@@ -86,11 +89,19 @@ def signup_view(request):
 
 @login_required
 def success_view(request):
-    return render(request, "moviestore/success.html")
+    return redirect('homepage')
 
+def custom_login_required(view_func):
+    decorated_view_func = login_required(view_func, login_url='login_required')
+    return decorated_view_func
+
+@custom_login_required
 def homepage(request):
     movies = Movie.objects.all()
     paginator = Paginator(movies, 10);
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'moviestore/movie_list.html', {'page_obj': page_obj})
+    return render(request, 'moviestore/movie_list.html', {'page_obj': page_obj, 'username': request.user.username})
+
+def login_required_view(request):
+    return render(request, 'moviestore/loginrequired.html')

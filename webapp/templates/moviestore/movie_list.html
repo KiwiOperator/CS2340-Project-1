@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Movie List</h1>
+    <p>Welcome, {{ username }}!</p>
     <ul>
         {% for movie in page_obj %}
             <li>
@@ -15,6 +16,7 @@
                 <p><strong>Overview:</strong> {{ movie.overview }}</p>
                 <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
                 <img src="{{ movie.image_url }}" alt="{{ movie.title }} poster">
+                <p><a href="{% url 'create_review' %}?movie_title={{ movie.title }}">Add Review</a></p>
             </li>
         {% endfor %}
     </ul>

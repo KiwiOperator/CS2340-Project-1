@@ -126,10 +126,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Reset password
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False  # Don't use SSL
-EMAIL_HOST_USER = 'cineopasswordservice@outlook.com'
-EMAIL_HOST_PASSWORD = 'kyxafdjqhwzidxkj'
+EMAIL_HOST_USER = 'cineopasswordservices@zohomail.com'
+EMAIL_HOST_PASSWORD = 'sakusendoorinisusumu'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -10,6 +10,10 @@ urlpatterns = [
     path("signup/", signup_view, name="signup"),
     path("logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
     path("success/", success_view, name="success"),
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('review_page/', review_page, name="review_page"),  # Add this line for the review page
     path('review/create/', create_review, name="create_review"),
     path('review/edit/<int:review_id>/', edit_review, name="edit_review"),

@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from .forms import CustomUserCreationForm  # Import the custom form
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from .forms import LoginForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Review, Movie
 from .forms import ReviewForm

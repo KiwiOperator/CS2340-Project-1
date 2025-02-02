@@ -1,8 +1,25 @@
-{% block content %}
-<h1>Write a Review</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Review</title>
+</head>
+<body>
+    <h1>Create Review for {{ form.movie_title.value }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Past Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+        <li>
+            <strong>{{ review.user.username }}</strong> - {{ review.rating }}/5
+            <p>{{ review.review_text }}</p>
+            <p><em>Reviewed on {{ review.created_at }}</em></p>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+</body>
+</html>

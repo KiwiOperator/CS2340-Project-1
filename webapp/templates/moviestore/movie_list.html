@@ -8,6 +8,10 @@
 <body>
     <h1>Movie List</h1>
     <p>Welcome, {{ username }}!</p>
+    <form method="get" action="{% url 'homepage' %}">
+        <input type="text" name="q" placeholder="Enter the name of the movie you are looking for..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
     <ul>
         {% for movie in page_obj %}
             <li>

@@ -96,7 +96,11 @@ def custom_login_required(view_func):
 
 @custom_login_required
 def homepage(request):
-    movies = Movie.objects.all()
+    query = request.GET.get('q')
+    if query:
+        movies = Movie.objects.filter(title__icontains=query)
+    else:
+        movies = Movie.objects.all()
     paginator = Paginator(movies, 10);
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

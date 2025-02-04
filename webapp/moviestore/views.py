@@ -101,10 +101,20 @@ def homepage(request):
         movies = Movie.objects.filter(title__icontains=query)
     else:
         movies = Movie.objects.all()
-    paginator = Paginator(movies, 10);
+    paginator = Paginator(movies, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'moviestore/movie_list.html', {'page_obj': page_obj, 'username': request.user.username})
 
 def login_required_view(request):
     return render(request, 'moviestore/loginrequired.html')
+
+def home(request):
+    query = request.GET.get('q')
+    if query:
+        movies = Movie.objects.filter(title__icontains=query)
+    else:
+        movies = Movie.objects.all()
+    paginator = Paginator(movies, 10)
+    page_obj = paginator.get_page(1)
+    return render(request, 'moviestore/home.html', {'page_obj': page_obj})

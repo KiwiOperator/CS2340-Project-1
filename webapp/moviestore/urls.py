@@ -1,10 +1,12 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from .views import homepage, login_view, signup_view, success_view, create_review, edit_review, delete_review, index, \
+from .views import home, homepage, login_view, signup_view, success_view, create_review, edit_review, delete_review, index, \
     review_page, login_required_view  # Add review_page here
 
 urlpatterns = [
     path("", index, name="index"),
+    path('home/', home, name="home"),
+    path('signup/', signup_view, name="signup"),
     path('homepage/', homepage, name="homepage"),
     path("login/", login_view, name="login"),
     path("signup/", signup_view, name="signup"),

@@ -2,7 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import home, homepage, login_view, signup_view, success_view, create_review, edit_review, delete_review, index, \
     review_page, login_required_view  # Add review_page here
-
+from .import views
 urlpatterns = [
     path("", index, name="index"),
     path('home/', home, name="home"),
@@ -20,5 +20,10 @@ urlpatterns = [
     path('review/create/', create_review, name="create_review"),
     path('review/edit/<int:review_id>/', edit_review, name="edit_review"),
     path('review/delete/<int:review_id>/', delete_review, name="delete_review"),
-    path('loginrequired/', login_required_view, name="login_required")
+    path('loginrequired/', login_required_view, name="login_required"),
+    path('add_to_cart/<int:movie_id>/', views.add_to_cart, name='add_to_cart'),
+    path('movie/<int:movie_id>/', views.movie_detail, name='movie_detail'),\
+    path('shopping_cart/', views.shopping_cart, name='shopping_cart'),
+    path('remove_from_cart/<int:movie_id>/', views.remove_from_cart, name='remove_from_cart'),
+
 ]

@@ -6,7 +6,7 @@ from .forms import CustomUserCreationForm  # Import the custom form
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Review, Movie
+from .models import Review, Movie, ShoppingCart
 from .forms import ReviewForm
 from django.core.paginator import Paginator
 
@@ -118,3 +118,26 @@ def home(request):
     paginator = Paginator(movies, 10)
     page_obj = paginator.get_page(1)
     return render(request, 'moviestore/home.html', {'page_obj': page_obj})
+
+@login_required
+def add_to_cart(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    cart, created = ShoppingCart.objects.get_or_create(user = request.user)
+    cart.movies.add(movie)
+    return redirect('homepage')
+
+def movie_detail(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    return render(request, 'moviestore/movie_detail.html', {'movie': movie})
+
+@login_required
+def shopping_cart(request):
+    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+    return render(request, 'moviestore/shopping_cart.html', {'cart': cart})
+
+@login_required
+def remove_from_cart(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    cart = ShoppingCart.objects.get(user=request.user)
+    cart.movies.remove(movie)
+    return redirect('shopping_cart')

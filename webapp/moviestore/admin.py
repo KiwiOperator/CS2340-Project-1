@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Review, Movie
+from .models import Review, Movie, ShoppingCart
+
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('movie_title', 'user', 'rating', 'created_at', 'updated_at')  # Columns to display
@@ -16,3 +17,12 @@ class ReviewAdmin(admin.ModelAdmin):
 
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Movie)
+
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'get_movies')
+
+    def get_movies(self, obj):
+        return ", ".join([movie.title for movie in obj.movies.all()])
+    get_movies.short_description = 'Movies'
+
+admin.site.register(ShoppingCart, ShoppingCartAdmin)

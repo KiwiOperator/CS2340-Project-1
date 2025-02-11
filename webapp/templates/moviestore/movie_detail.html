@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'moviestore/style.css' %}">
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <p><strong>Genre:</strong> {{ movie.genre }}</p>
+    <p><strong>Overview:</strong> {{ movie.overview }}</p>
+    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+    <img src="{{ movie.image_url }}" alt="{{ movie.title }} poster">
+    {% if movie in request.user.shoppingcart.movies.all %}
+        <p><img src="{% static 'moviestore/in_cart_icon.png' %}" alt="In Cart"> This movie is in your cart</p>
+    {% else %}
+    <p><a href="{% url 'create_review' %}?movie_title={{ movie.title }}">Add Review</a></p>
+    <form method="post" action="{% url 'add_to_cart' movie.id %}">
+        {% csrf_token %}
+        <button type="submit">Purchase</button>
+    </form>
+    {% endif %}
+</body>
+</html>

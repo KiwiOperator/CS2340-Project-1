@@ -6,25 +6,27 @@
     <link rel="stylesheet" type="text/css" href="{% static 'moviestore/style.css' %}">
 </head>
 <body>
-    <h1>Movie List</h1>
-    <p>Welcome, {{ username }}!</p>
-    <form method="get" action="{% url 'homepage' %}">
-        <input type="text" name="q" placeholder="Enter the name of the movie you are looking for..." value="{{ query }}">
-        <button type="submit">Search</button>
-    </form>
-    <ul>
-        {% for movie in page_obj %}
-            <li>
-                <h2>{{ movie.title }}</h2>
-                <p><strong>Genre:</strong> {{ movie.genre }}</p>
-                <p><strong>Overview:</strong> {{ movie.overview }}</p>
-                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-                <img src="{{ movie.image_url }}" alt="{{ movie.title }} poster">
-                <p><a href="{% url 'create_review' %}?movie_title={{ movie.title }}">Add Review</a></p>
-            </li>
-        {% endfor %}
-    </ul>
-    <div class="pagination">
+<h1>Movie List</h1>
+<p>Welcome, {{ username }}!</p>
+<form method="get" action="{% url 'homepage' %}">
+    <input type="text" name="q" placeholder="Enter the name of the movie you are looking for..." value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+<a href="{% url 'shopping_cart' %}">
+    <button type="button">View Shopping Cart</button>
+</a>
+<ul>
+    {% for movie in page_obj %}
+        <li>
+            <h2><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a></h2>
+            <p><strong>Genre:</strong> {{ movie.genre }}</p>
+            <p><strong>Overview:</strong> {{ movie.overview }}</p>
+            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+            <img src="{{ movie.image_url }}" alt="{{ movie.title }} poster">
+        </li>
+    {% endfor %}
+</ul>
+<div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a href="?page=1">&laquo; first</a>
@@ -40,6 +42,6 @@
                 <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
-    </div>
+</div>
 </body>
 </html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Shopping Cart</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'moviestore/style.css' %}">
+</head>
+<body>
+    <h1>Your Shopping Cart</h1>
+    <ul>
+        {% for movie in cart.movies.all %}
+            <li>{{ movie.title }} - <a href="{% url 'remove_from_cart' movie.id %}">Remove</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+</body>
+</html>

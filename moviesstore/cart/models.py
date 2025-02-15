@@ -8,6 +8,11 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.ManyToManyField(Movie, through='Item')
+
+    def save(self, *args, **kwargs):
+        self.total = sum(item.price * item.quantity for item in self.item_set.all())
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return str(self.id) + ' - ' + self.user.username
 

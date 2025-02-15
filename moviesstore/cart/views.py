@@ -62,17 +62,16 @@ def purchase(request):
 
     movies_in_cart = Movie.objects.filter(id__in=cart.keys())
     cart_total = calculate_cart_total(cart, movies_in_cart)
-
     order = Order.objects.create(user=request.user, total=cart_total)
-
+    order.save()
     for movie in movies_in_cart:
         Item.objects.create(
             movie=movie,
-            price=movie.price,
+            price=movie.price,  # Ensure price is set correctly
             order=order,
             quantity=cart[str(movie.id)]
         )
-
+    order.movie.set(movies_in_cart)
     request.session['cart'] = {}
 
     return render(request, 'cart/purchase.html', {

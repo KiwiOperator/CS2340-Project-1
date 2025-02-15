@@ -5,11 +5,6 @@ from movies.models import Movie, Review
 def home_view(request):
     example_movies = Movie.objects.all()[:4]
     example_reviews = Review.objects.order_by('-date')[:4]
-
-    print("Home View Called!")  # Debugging
-    print("Movies:", example_movies)  # Debugging
-    print("Reviews:", example_reviews)  # Debugging
-
     return render(request, 'home/index.html', {'example_movies': example_movies, 'example_reviews': example_reviews})
 
 def index(request):

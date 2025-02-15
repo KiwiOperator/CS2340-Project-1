@@ -24,21 +24,31 @@ def login(request):
             auth_login(request, user)
             return redirect('home.index')
 
-def signup(request):
-    template_data = {}
-    template_data['title'] = 'Sign Up'
+# def signup(request):
+#     template_data = {}
+#     template_data['title'] = 'Sign Up'
+#
+#     if request.method == 'GET':
+#         template_data['form'] = CustomUserCreationForm()
+#         return render(request, 'accounts/signup.html', {'template_data': template_data})
+#     elif request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('accounts.login')
+#         else:
+#             template_data['form'] = form
+#             return render(request, 'accounts/signup.html', {'template_data': template_data})
 
-    if request.method == 'GET':
-        template_data['form'] = CustomUserCreationForm()
-        return render(request, 'accounts/signup.html', {'template_data': template_data})
-    elif request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
+def signup(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('accounts.login')
-        else:
-            template_data['form'] = form
-            return render(request, 'accounts/signup.html', {'template_data': template_data})
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'accounts/signup.html', {'form': form})
 
 @login_required
 def orders(request):

@@ -136,10 +136,13 @@ MEDIA_URL = '/media/'
 
 # Reset password
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.zoho.com'
+# EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False  # Don't use SSL
-EMAIL_HOST_USER = 'cineopasswordservices@zohomail.com'
-EMAIL_HOST_PASSWORD = 'sakusendoorinisusumu'
+# EMAIL_HOST_USER = 'cineopasswordservices@zohomail.com'
+# EMAIL_HOST_PASSWORD = 'sakusendoorinisusumu'
+EMAIL_HOST_USER = 'collaborativejournalteamwebdev@gmail.com'
+EMAIL_HOST_PASSWORD = 'wqko ffst juxn szfl'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

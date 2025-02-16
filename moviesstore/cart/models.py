@@ -10,7 +10,8 @@ class Order(models.Model):
     movie = models.ManyToManyField(Movie, through='Item')
 
     def save(self, *args, **kwargs):
-        self.total = sum(item.price * item.quantity for item in self.item_set.all())
+        if self.pk:  # Only recalculate total if the order already has a primary key
+            self.total = sum(item.price * item.quantity for item in self.item_set.all())
         super().save(*args, **kwargs)
 
     def __str__(self):

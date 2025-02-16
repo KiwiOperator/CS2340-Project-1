@@ -40,10 +40,11 @@
 }
 
 .img-card-200 {
-  max-height: 200px;
-  max-width: 100%;
-  width: auto;
-  height: auto;
+    max-height: 200px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
 
 .img-card-400 {
   max-height: 400px;
